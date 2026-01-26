@@ -8,6 +8,7 @@ const HANDYMEN = [
     id: "1", 
     name: "John the Plumber", 
     skill: "Plumbing",
+    profile: "/profiles/john.jpg", // profile image
     ratings: [5, 4, 4, 5],
     projects: [
       { image: "/projects/p1.jpg", comment: "Fixed my leaking pipe perfectly!", rating: 5 },
@@ -18,6 +19,7 @@ const HANDYMEN = [
     id: "2", 
     name: "Sipho Electric", 
     skill: "Electrical",
+    profile: "/profiles/sipho.jpg", // profile image
     ratings: [4, 3, 5],
     projects: [
       { image: "/projects/e1.jpg", comment: "Installed lights neatly", rating: 5 }
@@ -106,7 +108,8 @@ export default function RequestService({ handymen = [], setSelectedHandyman }) {
         <div className="handyman-list">
           {handymen.map((h) => (
             <div key={h.id} className="handyman-card">
-              <div>
+              <img src={h.profile} alt={h.name} className="handyman-profile" />
+              <div className="handyman-info">
                 <strong>{h.name}</strong>
                 <p>{h.skill}</p>
                 <p>
@@ -131,6 +134,7 @@ export default function RequestService({ handymen = [], setSelectedHandyman }) {
 
       {selectedHandymanLocal && (
         <div className="booking-panel">
+          <img src={selectedHandymanLocal.profile} alt={selectedHandymanLocal.name} className="handyman-profile-large"/>
           <h3>Booking for {selectedHandymanLocal.name}</h3>
 
           <label>
