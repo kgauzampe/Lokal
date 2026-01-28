@@ -8,6 +8,7 @@ const HANDYMEN = [
     id: "1", 
     name: "John the Plumber", 
     skill: "Plumbing",
+    experience: 6, // in years
     profile: "../../public/img/Niso.jpeg", // profile image
     ratings: [5, 4, 4, 5],
     projects: [
@@ -19,6 +20,7 @@ const HANDYMEN = [
     id: "2", 
     name: "Sipho Electric", 
     skill: "Electrical",
+    experience: 3,
     profile: "/img/Niso.jpeg",
     ratings: [4, 3, 5],
     projects: [
@@ -47,6 +49,11 @@ const getAverageRating = (ratings) => {
 
 export default function RequestService({ handymen = [], setSelectedHandyman }) {
   const navigate = useNavigate();
+  
+  // Filters
+  const [disciplineFilter, setDisciplineFilter] = useState("all");
+  const [experienceFilter, setExperienceFilter] = useState("all");
+
   const [selectedHandymanLocal, setSelectedHandymanLocal] = useState(null);
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
@@ -57,18 +64,22 @@ export default function RequestService({ handymen = [], setSelectedHandyman }) {
 
   if (!handymen) return null;
 
-  // Get available slots for selected handyman and date
+  // Derived filtered list based on discipline and experience
+  const filteredHandymen = handymen.filter((h) => {
+    const disciplineMatch = disciplineFilter === "all" || h.skill === disciplineFilter;
+    const experienceMatch = experienceFilter === "all" || h.experience >= Number(experienceFilter);
+    return disciplineMatch && experienceMatch;
+  });
+
+  // Available time slots
   const getAvailableSlots = () => {
     if (!selectedHandymanLocal || !selectedDate) return [];
 
     const booked = bookings
-      .filter(
-        (b) =>
-          b.handymanId === selectedHandymanLocal.id && b.date === selectedDate
-      )
-      .map((b) => b.time);
+      .filter(b => b.handymanId === selectedHandymanLocal.id && b.date === selectedDate)
+      .map(b => b.time);
 
-    return TIME_SLOTS.filter((slot) => !booked.includes(slot));
+    return TIME_SLOTS.filter(slot => !booked.includes(slot));
   };
 
   const bookSlot = () => {
@@ -87,7 +98,7 @@ export default function RequestService({ handymen = [], setSelectedHandyman }) {
     setBookings(updatedBookings);
     setSuccess(true);
 
-    // Reset selection for next booking
+    // Reset selection
     setSelectedTime("");
     setSelectedDate("");
     setSelectedHandymanLocal(null);
@@ -95,19 +106,43 @@ export default function RequestService({ handymen = [], setSelectedHandyman }) {
 
   const viewProjects = (handyman) => {
     setSelectedHandyman(handyman); // pass to App.js state
-    navigate("/projects"); // navigate to projects page
+    navigate("/projects");
   };
-  
 
   return (
     <div className="request-service">
       <h2>Handymen within 20km</h2>
 
-      {handymen.length === 0 && <p>No handymen found near your location.</p>}
+      {/* Filters */}
+      {!selectedHandymanLocal && (
+        <div className="filters">
+          <label>
+            Discipline:
+            <select value={disciplineFilter} onChange={(e) => setDisciplineFilter(e.target.value)}>
+              <option value="all">All</option>
+              <option value="Plumbing">Plumbing</option>
+              <option value="Electrical">Electrical</option>
+              <option value="General Repairs">General Repairs</option>
+            </select>
+          </label>
 
+          <label>
+            Experience:
+            <select value={experienceFilter} onChange={(e) => setExperienceFilter(e.target.value)}>
+              <option value="all">All</option>
+              <option value="1">1+ years</option>
+              <option value="3">3+ years</option>
+              <option value="5">5+ years</option>
+            </select>
+          </label>
+        </div>
+      )}
+
+      {/* Handyman List */}
       {!selectedHandymanLocal && (
         <div className="handyman-list">
-          {handymen.map((h) => (
+          {filteredHandymen.length === 0 && <p>No handymen match your filters.</p>}
+          {filteredHandymen.map((h) => (
             <div key={h.id} className="handyman-card">
               <img src={h.profile} alt={h.name} className="handyman-profile" />
               <div className="handyman-info">
@@ -119,23 +154,25 @@ export default function RequestService({ handymen = [], setSelectedHandyman }) {
                     <span key={i}>{i < Math.round(getAverageRating(h.ratings)) ? "★" : "☆"}</span>
                   ))}
                 </p>
+                <p>Experience: {h.experience} {h.experience === 1 ? "year" : "years"}</p>
               </div>
               <div className="handyman-actions">
-                <button onClick={() => setSelectedHandymanLocal(h)}>
-                  Book
-                </button>
-                <button onClick={() => viewProjects(h)}>
-                  View Projects
-                </button>
+                <button onClick={() => setSelectedHandymanLocal(h)}>Book</button>
+                <button onClick={() => viewProjects(h)}>View Projects</button>
               </div>
             </div>
           ))}
         </div>
       )}
 
+      {/* Booking Panel */}
       {selectedHandymanLocal && (
         <div className="booking-panel">
-          <img src={selectedHandymanLocal.profile} alt={selectedHandymanLocal.name} className="handyman-profile-large"/>
+          
+          <img src={selectedHandymanLocal.profile} 
+          style={{ width: "80px", height: "80px", borderRadius: "50%", objectFit: "cover" }} 
+          alt={selectedHandymanLocal.name} className="handyman-profile-large"/>
+          
           <h3>Booking for {selectedHandymanLocal.name}</h3>
 
           <label>
@@ -149,10 +186,7 @@ export default function RequestService({ handymen = [], setSelectedHandyman }) {
 
           {selectedDate && (
             <div className="time-slots">
-              {getAvailableSlots().length === 0 && (
-                <p>All slots are booked for this day.</p>
-              )}
-
+              {getAvailableSlots().length === 0 && <p>All slots are booked for this day.</p>}
               {getAvailableSlots().map((slot) => (
                 <button
                   key={slot}
@@ -171,15 +205,11 @@ export default function RequestService({ handymen = [], setSelectedHandyman }) {
                 Booking {selectedHandymanLocal.name} on {selectedDate} at {selectedTime}?
               </p>
               <button onClick={bookSlot}>Confirm Booking</button>
-              <button
-                onClick={() => {
-                  setSelectedHandymanLocal(null);
-                  setSelectedDate("");
-                  setSelectedTime("");
-                }}
-              >
-                Cancel
-              </button>
+              <button onClick={() => {
+                setSelectedHandymanLocal(null);
+                setSelectedDate("");
+                setSelectedTime("");
+              }}>Cancel</button>
             </div>
           )}
 

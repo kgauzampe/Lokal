@@ -5,13 +5,51 @@ import Footer from "./components/Footer";
 import RequestService from "./pages/RequestService";
 import PreviousProjects from "./pages/PreviousProjects";
 
+// Full handyman data including profile, ratings, and projects
 const HANDYMEN = [
-  { id: "1", name: "John the Plumber", skill: "Plumbing", lat: -27.78, lng: 30.82 },
-  { id: "2", name: "Sipho Electric", skill: "Electrical", lat: -28.32, lng: 31.4 },
-  { id: "3", name: "Mike Handyman", skill: "General Repairs", lat: -28.45, lng: 31.5 }
+  {
+    id: "1",
+    name: "John the Plumber",
+    skill: "Plumbing",
+    experience: 6, // years
+    lat: -27.78,
+    lng: 30.82,
+    profile: "/img/1.jpeg",
+    ratings: [5, 4, 4, 5],
+    projects: [
+      { image: "/projects/p1.jpg", comment: "Fixed my leaking pipe perfectly!", rating: 5 },
+      { image: "/projects/p2.jpg", comment: "Very fast and reliable", rating: 4 }
+    ]
+  },
+  {
+    id: "2",
+    name: "Sipho Electric",
+    skill: "Electrical",
+    experience: 3,
+    lat: -28.32,
+    lng: 31.4,
+    profile: "/img/2.jpeg",
+    ratings: [4, 3, 5],
+    projects: [
+      { image: "/projects/e1.jpg", comment: "Installed lights neatly", rating: 5 }
+    ]
+  },
+  {
+    id: "3",
+    name: "Mike Handyman",
+    skill: "General Repairs",
+    experience: 1,
+    lat: -28.45,
+    lng: 31.5,
+    profile: "/img/3.jpeg",
+    ratings: [3, 4],
+    projects: [
+      { image: "/projects/g1.jpg", comment: "Handled all minor repairs", rating: 4 }
+    ]
+  }
 ];
 
-// Haversine distance in KM
+// Haversine formula to calculate distance in KM
 function getDistance(lat1, lon1, lat2, lon2) {
   const R = 6371;
   const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -28,10 +66,11 @@ function getDistance(lat1, lon1, lat2, lon2) {
 
 export default function App() {
   const [nearbyHandymen, setNearbyHandymen] = useState([]);
-  const [selectedHandyman, setSelectedHandyman] = useState(null); // ✅ REQUIRED
+  const [selectedHandyman, setSelectedHandyman] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Get user's location and filter handymen within 20km
   useEffect(() => {
     if (!navigator.geolocation) {
       setError("Geolocation not supported");
@@ -80,7 +119,13 @@ export default function App() {
 
             <Route
               path="/projects"
-              element={<PreviousProjects handyman={selectedHandyman} />}
+              element={
+                selectedHandyman ? (
+                  <PreviousProjects handyman={selectedHandyman} />
+                ) : (
+                  <p>Please select a handyman first.</p>
+                )
+              }
             />
           </Routes>
         )}
