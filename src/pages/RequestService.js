@@ -8,7 +8,7 @@ const HANDYMEN = [
     id: "1", 
     name: "John the Plumber", 
     skill: "Plumbing",
-    profile: "/profiles/john.jpg", // profile image
+    profile: "../../public/img/Niso.jpeg", // profile image
     ratings: [5, 4, 4, 5],
     projects: [
       { image: "/projects/p1.jpg", comment: "Fixed my leaking pipe perfectly!", rating: 5 },
@@ -19,7 +19,7 @@ const HANDYMEN = [
     id: "2", 
     name: "Sipho Electric", 
     skill: "Electrical",
-    profile: "/profiles/sipho.jpg", // profile image
+    profile: "/img/Niso.jpeg",
     ratings: [4, 3, 5],
     projects: [
       { image: "/projects/e1.jpg", comment: "Installed lights neatly", rating: 5 }
