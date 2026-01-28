@@ -46,7 +46,22 @@ const HANDYMEN = [
     projects: [
       { image: "/projects/g1.jpg", comment: "Handled all minor repairs", rating: 4 }
     ]
-  }
+  },
+    {
+    id: "4",
+    name: "John Grass",
+    skill: "Landscaper",
+    experience: 6, // years
+    lat: -27.42,
+    lng: 30.81,
+    profile: "/img/1.jpeg",
+    ratings: [5, 4, 4, 5],
+    projects: [
+      { image: "/projects/p1.jpg", comment: "Fixed my leaking pipe perfectly!", rating: 5 },
+      { image: "/projects/p2.jpg", comment: "Very fast and reliable", rating: 4 }
+    ]
+  },
+
 ];
 
 // Haversine formula to calculate distance in KM
@@ -84,7 +99,7 @@ export default function App() {
         const userLng = pos.coords.longitude;
 
         const filtered = HANDYMEN.filter(h =>
-          getDistance(userLat, userLng, h.lat, h.lng) <= 20
+          getDistance(userLat, userLng, h.lat, h.lng) <= 100
         );
 
         setNearbyHandymen(filtered);

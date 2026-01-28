@@ -111,31 +111,33 @@ export default function RequestService({ handymen = [], setSelectedHandyman }) {
 
   return (
     <div className="request-service">
-      <h2>Handymen within 20km</h2>
+      <h2>Handymen within 100km</h2>
 
       {/* Filters */}
       {!selectedHandymanLocal && (
-        <div className="filters">
-          <label>
-            Discipline:
-            <select value={disciplineFilter} onChange={(e) => setDisciplineFilter(e.target.value)}>
-              <option value="all">All</option>
-              <option value="Plumbing">Plumbing</option>
-              <option value="Electrical">Electrical</option>
-              <option value="General Repairs">General Repairs</option>
-            </select>
-          </label>
+       <div className="filters">
+  <select
+    value={disciplineFilter}
+    onChange={(e) => setDisciplineFilter(e.target.value)}
+  >
+    <option value="all">All Disciplines</option>
+    <option value="Plumbing">Plumbing</option>
+    <option value="Electrical">Electrical</option>
+    <option value="General Repairs">General Repairs</option>
+  </select>
 
-          <label>
-            Experience:
-            <select value={experienceFilter} onChange={(e) => setExperienceFilter(e.target.value)}>
-              <option value="all">All</option>
-              <option value="1">1+ years</option>
-              <option value="3">3+ years</option>
-              <option value="5">5+ years</option>
-            </select>
-          </label>
-        </div>
+  <select
+    value={experienceFilter}
+    onChange={(e) => setExperienceFilter(e.target.value)}
+  >
+    <option value="all">All Experience</option>
+    <option value="1">1+ years</option>
+    <option value="3">3+ years</option>
+    <option value="5">5+ years</option>
+    <option value="10">10+ years</option>
+  </select>
+</div>
+
       )}
 
       {/* Handyman List */}
