@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
 import RequestService from "./pages/RequestService";
+import PreviousProjects from "./pages/PreviousProjects";
 
 const HANDYMEN = [
   { id: "1", name: "John the Plumber", skill: "Plumbing", lat: -27.78, lng: 30.82 },
@@ -10,6 +11,7 @@ const HANDYMEN = [
   { id: "3", name: "Mike Handyman", skill: "General Repairs", lat: -28.45, lng: 31.5 }
 ];
 
+// Haversine distance in KM
 function getDistance(lat1, lon1, lat2, lon2) {
   const R = 6371;
   const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -26,6 +28,7 @@ function getDistance(lat1, lon1, lat2, lon2) {
 
 export default function App() {
   const [nearbyHandymen, setNearbyHandymen] = useState([]);
+  const [selectedHandyman, setSelectedHandyman] = useState(null); // ✅ REQUIRED
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -67,7 +70,17 @@ export default function App() {
           <Routes>
             <Route
               path="/"
-              element={<RequestService handymen={nearbyHandymen} />}
+              element={
+                <RequestService
+                  handymen={nearbyHandymen}
+                  setSelectedHandyman={setSelectedHandyman}
+                />
+              }
+            />
+
+            <Route
+              path="/projects"
+              element={<PreviousProjects handyman={selectedHandyman} />}
             />
           </Routes>
         )}

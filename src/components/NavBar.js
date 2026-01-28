@@ -5,7 +5,7 @@ export default function NavBar() {
   return (
     <nav className="navbar">
       <div className="navbar__logo">
-        🔧 HandyFinder
+        🔧 Lokal
       </div>
 
       <ul className="navbar__links">

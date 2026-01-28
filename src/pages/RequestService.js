@@ -97,6 +97,7 @@ export default function RequestService({ handymen = [], setSelectedHandyman }) {
     setSelectedHandyman(handyman); // pass to App.js state
     navigate("/projects"); // navigate to projects page
   };
+  
 
   return (
     <div className="request-service">
