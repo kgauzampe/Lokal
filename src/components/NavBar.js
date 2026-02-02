@@ -5,8 +5,9 @@ export default function NavBar() {
   return (
     <nav className="navbar">
       <div className="navbar__logo">
-        🔧 Lokal
+        <img src="/img/logo.png" alt="Lokal logo" />
       </div>
+
 
       <ul className="navbar__links">
         <li><Link to="/">Home</Link></li>

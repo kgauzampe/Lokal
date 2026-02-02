@@ -4,6 +4,8 @@ import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
 import RequestService from "./pages/RequestService";
 import PreviousProjects from "./pages/PreviousProjects";
+import Auth from "./pages/Auth";
+
 
 // Full handyman data including profile, ratings, and projects
 const HANDYMEN = [
@@ -83,6 +85,7 @@ export default function App() {
   const [nearbyHandymen, setNearbyHandymen] = useState([]);
   const [selectedHandyman, setSelectedHandyman] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null); // null = not signed in
   const [error, setError] = useState(null);
 
   // Get user's location and filter handymen within 20km
@@ -142,6 +145,22 @@ export default function App() {
                 )
               }
             />
+            <Route
+              path="/auth"
+              element={<Auth setUser={setUser} />}
+            />
+            {/* <Route
+              path="/"
+              element={
+                <ProtectedRoute user={user}>
+                  <RequestService
+                    handymen={nearbyHandymen}
+                    setSelectedHandyman={setSelectedHandyman}
+                  />
+                </ProtectedRoute>
+              }
+            /> */}
+
           </Routes>
         )}
       </main>
