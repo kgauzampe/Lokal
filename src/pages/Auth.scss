@@ -75,3 +75,14 @@
     font-weight: bold;
   }
 }
+.auth-error {
+  color: #ff4d4f; // red
+  margin-top: 10px;
+  font-size: 0.9rem;
+}
+
+.auth-success {
+  color: #52c41a; // green
+  margin-top: 10px;
+  font-size: 0.9rem;
+}
